@@ -18,10 +18,10 @@ export const homePage = async (request,response)=>{
 export const signupUser = async (request, response) => {
     try {
         console.log(request.body)
-        // const user = { username: request.body.username, name: request.body.name, password: request.body.password };
+        const user = { username: request.body.username, name: request.body.name, password: request.body.password };
 
-        // const newUser = new User(user);
-        // await newUser.save();
+        const newUser = new User(user);
+        await newUser.save();
 
         return response.status(200).json({ msg: 'Signup successful' });
     } catch (error) {
