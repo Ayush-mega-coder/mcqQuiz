@@ -7,8 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import Admin from './components/admin/Admin';
 import Login from './components/account/Login';
 import UserView from './components/user/UserView';
-import CreateExam from './components/createExam/CreateExam';
-
+import CreateExam from './components/CreateExam/CreateExam';
+import TakeExam from './components/takeExam/TakeExam';
 
 function App() {
   return (
@@ -23,6 +23,8 @@ function App() {
 
       <Route path='/admin' element={<Admin/>}/>
       <Route path='/exam' element={<CreateExam/>}/>
+      <Route path='/takeexam' element={<TakeExam/>}/>
+
      </Routes>
      </BrowserRouter>
     </div>

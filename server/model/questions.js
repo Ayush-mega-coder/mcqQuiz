@@ -5,32 +5,37 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  solution: {
+
     option1: {
+      
       type: String,
-    //   required: true,
+      required: true,
     },
     option2: {
       type: String,
-    //   required: true,
+      required: true,
     },
     option3: {
       type: String,
-    //   required: true,
+      required: true,
     },
     option4: {
       type: String,
-    //   required: true,
+      required: true,
     },
-  },
+  
   marks: {
-    type: String,
+    type: Number,
     required: true,
   },
   duration: {
-    type: String,
+    type: Number,
     required: true,
   },
+  answer:{
+    type:Number,
+    required:true,
+  }
 });
 
 const Question = mongoose.model('questions', questionSchema);

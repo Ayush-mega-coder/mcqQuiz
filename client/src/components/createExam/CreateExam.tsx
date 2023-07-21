@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  TextField,
-  Box,
-  Button,
-  Typography,
-  styled,
-} from "@mui/material";
+import { TextField, Box, Button, Typography, styled } from "@mui/material";
 
 interface QuestionFormValues {
   question: string;
@@ -14,8 +8,9 @@ interface QuestionFormValues {
   option2: string;
   option3: string;
   option4: string;
-  marks: string;
-  duration: string;
+  marks: Number;
+  duration: Number;
+  answer:Number
 }
 
 const FormWrapper = styled(Box)(({ theme }) => ({
@@ -51,8 +46,9 @@ const QuestionForm: React.FC = () => {
     option2: "",
     option3: "",
     option4: "",
-    marks: "",
-    duration: "",
+    marks:0 ,
+    duration:0 ,
+    answer: 0
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +69,8 @@ const QuestionForm: React.FC = () => {
         !formValues.option3 ||
         !formValues.option4 ||
         !formValues.marks ||
-        !formValues.duration
+        !formValues.duration ||
+        !formValues.answer
       ) {
         console.error("Please fill all required fields");
         return;
@@ -147,6 +144,14 @@ const QuestionForm: React.FC = () => {
         label="Duration"
         name="duration"
         value={formValues.duration}
+        onChange={handleChange}
+        required
+      />
+      <TextField
+        variant="outlined"
+        label="Answer"
+        name="answer"
+        value={formValues.answer}
         onChange={handleChange}
         required
       />

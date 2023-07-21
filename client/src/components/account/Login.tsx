@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import {
   TextField,
@@ -11,8 +12,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  createStyles
 } from "@mui/material";
-
 
 const Component = styled(Box)`
   width: 400px;
@@ -26,8 +27,6 @@ const Image = styled("img")({
   margin: "auto",
   padding: "10px 0 0",
 });
-
-
 
 const Wrapper = styled(Box)`
   padding: 25px 35px;
@@ -44,7 +43,7 @@ const Wrapper = styled(Box)`
 
 const LoginButton = styled(Button)`
   text-transform: none;
-  background: #fb641b;
+  background: black;
   color: #fff;
   height: 48px;
   border-radius: 2px;
@@ -81,8 +80,7 @@ interface SignupValues {
   name: string;
   username: string;
   password: string;
-//   role: string;
-  
+  role: string;
 }
 
 const loginInitialValues: LoginValues = {
@@ -94,18 +92,16 @@ const signupInitialValues: SignupValues = {
   name: "",
   username: "",
   password: "",
-//   role: "",
-
+  role: "",
+  //   role: "",
 };
 
-const Login: React.FC= ({
-
-}) => {
+const Login: React.FC = ({}) => {
   const [login, setLogin] = useState<LoginValues>(loginInitialValues);
   const [signup, setSignup] = useState<SignupValues>(signupInitialValues);
   const [error, showError] = useState<string>("");
   const [account, toggleAccount] = useState<"login" | "signup">("login");
-
+  const navigate = useNavigate();
 
   const imageURL =
     "https://bloggingfornewbloggers.com/wp-content/uploads/2020/08/cropped-Blogging-for-New-Bloggers-logo-nv.png";
@@ -124,15 +120,24 @@ const Login: React.FC= ({
 
   const loginUser = async () => {
     try {
-      console.log('logged in')
-      
+      // console.log('logged in')
+      const loginUser = {
+        username: login.username,
+        password: login.password,
+      };
+      let response = await axios.post("http://localhost:8000/login", loginUser);
+      let isAdmin = response.data.role;
+      console.log("admin is", isAdmin);
+      if (response) {
+        if (isAdmin === "admin") navigate("/admin");
+        else navigate("/user");
+      }
+      console.log("Signup successful");
     } catch (error) {
       console.error(error);
       showError("An error occurred during user login. Please try again later.");
     }
   };
-
- 
 
   const signupUser = async () => {
     try {
@@ -140,21 +145,31 @@ const Login: React.FC= ({
         name: signup.name,
         username: signup.username,
         password: signup.password,
-        
+        role: signup.role,
+
         // role: signup.role, // Make sure you set the role in the SignupValues state
       };
-  
+
       // Replace 'YOUR_BACKEND_API_URL/signup' with the actual URL of your backend signup route
-      const response = await axios.post('http://localhost:8000/signup', newUser);
-  
+      const response = await axios.post(
+        "http://localhost:8000/signup",
+        newUser
+      );
+
       // If the signup was successful, you can handle the response here
       console.log(response.data.msg); // This will log 'Signup successfull'
+      if (response) {
+        showError("");
+        setSignup(signupInitialValues);
+        toggleAccount("login");
+      } else {
+        showError("Something went wrong! please try again later");
+      }
     } catch (error) {
-      console.error('Error found in signupUser', error);
+      console.error("Error found in signupUser", error);
       // Handle the error here
     }
   };
-  
 
   const toggleSignup = () => {
     account === "signup" ? toggleAccount("login") : toggleAccount("signup");
@@ -187,13 +202,9 @@ const Login: React.FC= ({
               Login
             </LoginButton>
             <Text style={{ textAlign: "center" }}>OR</Text>
-            <SignupButton
-              onClick={toggleSignup}
-              style={{ marginBottom: 50 }}
-            >
+            <SignupButton onClick={toggleSignup} style={{ marginBottom: 50 }}>
               Create an account
             </SignupButton>
-            
           </Wrapper>
         ) : (
           <Wrapper>
@@ -214,12 +225,17 @@ const Login: React.FC= ({
             <TextField
               variant="standard"
               value={signup.password}
-
               onChange={onInputChange}
               name="password"
               label={signup.password ? "" : "Enter Password"}
             />
-          
+            <TextField
+              variant="standard"
+              value={signup.role}
+              onChange={onInputChange}
+              name="role"
+              label={signup.role ? "" : "Enter Role"}
+            />
 
             <SignupButton onClick={signupUser}>Signup</SignupButton>
             <Text style={{ textAlign: "center" }}>OR</Text>
